@@ -19,7 +19,7 @@ config\psqlrc.conf
 En esta ruta de tu usuario:
 
 ```text
-C:\Users\Nlicolas\AppData\Roaming\postgresql\psqlrc.conf
+%APPDATA%\postgresql\psqlrc.conf
 ```
 
 Ese archivo aplica automaticamente:
