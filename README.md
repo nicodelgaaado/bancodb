@@ -8,6 +8,29 @@ Paquete reproducible para crear la base de datos relacional `bancodb` en Postgre
 - Cliente `psql` disponible en el PATH o instalado en una ruta comun de Windows.
 - Un usuario administrador de PostgreSQL, por defecto `postgres`.
 
+## Configuracion opcional para ver tildes en SQL Shell
+
+Si usas SQL Shell / `psql` en la consola clasica de Windows y las tildes se ven incorrectas, copia el archivo:
+
+```text
+config\psqlrc.conf
+```
+
+En esta ruta de tu usuario:
+
+```text
+C:\Users\Nlicolas\AppData\Roaming\postgresql\psqlrc.conf
+```
+
+Ese archivo aplica automaticamente:
+
+```sql
+\! chcp 1252
+\encoding WIN1252
+```
+
+Con esto no necesitas escribir esos comandos cada vez que abras `psql`.
+
 ## Ejecucion rapida en PowerShell
 
 Desde esta carpeta:
