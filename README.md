@@ -36,15 +36,16 @@ Con esto no necesitas escribir esos comandos cada vez que abras `psql`.
 Desde esta carpeta:
 
 ```powershell
-.\run.ps1 -User postgres -Password 123
+.\run.ps1 -User postgres
 ```
 
 Si `psql` no esta en el PATH:
 
 ```powershell
-.\run.ps1 -User postgres -Password 123 -PsqlPath "C:\Program Files\PostgreSQL\18\bin\psql.exe"
+.\run.ps1 -User postgres -PsqlPath "C:\Program Files\PostgreSQL\18\bin\psql.exe"
 ```
 
+El script solicitara la contraseña del usuario PostgreSQL durante la ejecucion.
 El script recrea la base `bancodb` desde cero. Si ya existe, la elimina y la vuelve a crear.
 
 ## Archivos SQL
