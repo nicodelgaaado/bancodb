@@ -1,0 +1,7 @@
+name = "bancodb"
+compatibility_date = "2026-05-10"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bancodb"
+database_id = "21222d8a-44ad-42d5-ba18-68bfffda06ea"

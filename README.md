@@ -54,6 +54,29 @@ El script recrea la base `bancodb` desde cero. Si ya existe, la elimina y la vue
 - `sql/02_schema.sql`: crea tablas, claves primarias, claves foraneas, restricciones e indices.
 - `sql/03_seed_data.sql`: inserta los registros solicitados en el laboratorio.
 - `sql/04_queries.sql`: ejecuta las 19 consultas del enunciado.
+- `sql/cloudflare_d1.sql`: version compatible con Cloudflare D1.
+
+## Despliegue en Cloudflare D1
+
+La base remota creada en Cloudflare es:
+
+```text
+Nombre: bancodb
+Database ID: 21222d8a-44ad-42d5-ba18-68bfffda06ea
+Region: ENAM
+```
+
+El archivo `wrangler.toml` contiene el binding `DB` hacia esa base. Para volver a cargar el esquema y los datos en D1:
+
+```powershell
+npx wrangler d1 execute bancodb --remote --file .\sql\cloudflare_d1.sql
+```
+
+Para validar una consulta rapida:
+
+```powershell
+npx wrangler d1 execute bancodb --remote --command "SELECT COUNT(*) AS total_clientes FROM clientes;"
+```
 
 ## Validacion incluida
 
