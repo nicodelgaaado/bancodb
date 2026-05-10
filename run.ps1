@@ -11,6 +11,11 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sqlDir = Join-Path $root "sql"
 
+# Force UTF-8 for psql output on Windows consoles so accented data is readable.
+[Console]::InputEncoding = [System.Text.UTF8Encoding]::new()
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+chcp 65001 | Out-Null
+
 if ([string]::IsNullOrWhiteSpace($PsqlPath)) {
     $psqlCommand = Get-Command psql -ErrorAction SilentlyContinue
     if ($null -ne $psqlCommand) {
@@ -47,7 +52,9 @@ if ([string]::IsNullOrWhiteSpace($Password)) {
 }
 
 $oldPgPassword = $env:PGPASSWORD
+$oldPgClientEncoding = $env:PGCLIENTENCODING
 $env:PGPASSWORD = $Password
+$env:PGCLIENTENCODING = "UTF8"
 
 function Invoke-PsqlFile {
     param(
@@ -93,4 +100,5 @@ try {
     Write-Host "Base de datos bancodb creada y validada correctamente."
 } finally {
     $env:PGPASSWORD = $oldPgPassword
+    $env:PGCLIENTENCODING = $oldPgClientEncoding
 }

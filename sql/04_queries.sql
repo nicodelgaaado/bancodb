@@ -1,4 +1,5 @@
 \set ON_ERROR_STOP on
+\encoding UTF8
 
 \echo '1. Clientes ordenados por ciudad'
 SELECT nombre, apellido, ciudad

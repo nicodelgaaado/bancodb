@@ -50,23 +50,34 @@ Despues ejecuta las 19 consultas solicitadas.
 Para ejecutar todas las consultas del PDF desde PowerShell:
 
 ```powershell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
+$env:PGCLIENTENCODING = "UTF8"
 psql -h localhost -p 5432 -U postgres -d bancodb -f .\sql\04_queries.sql
 Remove-Item Env:PGPASSWORD
+Remove-Item Env:PGCLIENTENCODING
 ```
 
 Si `psql` no esta en el PATH:
 
 ```powershell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
+$env:PGCLIENTENCODING = "UTF8"
 & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -p 5432 -U postgres -d bancodb -f .\sql\04_queries.sql
 Remove-Item Env:PGPASSWORD
+Remove-Item Env:PGCLIENTENCODING
 ```
 
 Tambien puedes entrar a la consola interactiva:
 
 ```powershell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
+$env:PGCLIENTENCODING = "UTF8"
 psql -h localhost -p 5432 -U postgres -d bancodb
 ```
 
@@ -191,14 +202,20 @@ WHERE saldo = (SELECT MIN(saldo) FROM cuentas);
 Primero entra a la base de datos:
 
 ```powershell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
+$env:PGCLIENTENCODING = "UTF8"
 psql -h localhost -p 5432 -U postgres -d bancodb
 ```
 
 Si `psql` no esta en el PATH:
 
 ```powershell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
+$env:PGCLIENTENCODING = "UTF8"
 & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -p 5432 -U postgres -d bancodb
 ```
 
