@@ -101,7 +101,7 @@ chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
 $env:PGCLIENTENCODING = "UTF8"
-psql -h localhost -p 5432 -U postgres -d bancodb -f .\sql\04_queries.sql
+psql --host=localhost --port=5432 --username=postgres --dbname=bancodb --file=.\sql\04_queries.sql
 Remove-Item Env:PGPASSWORD
 Remove-Item Env:PGCLIENTENCODING
 ```
@@ -113,7 +113,7 @@ chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
 $env:PGCLIENTENCODING = "UTF8"
-& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -p 5432 -U postgres -d bancodb -f .\sql\04_queries.sql
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" --host=localhost --port=5432 --username=postgres --dbname=bancodb --file=.\sql\04_queries.sql
 Remove-Item Env:PGPASSWORD
 Remove-Item Env:PGCLIENTENCODING
 ```
@@ -125,7 +125,7 @@ chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
 $env:PGCLIENTENCODING = "UTF8"
-psql -h localhost -p 5432 -U postgres -d bancodb
+psql --host=localhost --port=5432 --username=postgres --dbname=bancodb
 ```
 
 Dentro de `psql`, ejecuta estas consultas:
@@ -151,36 +151,36 @@ SELECT ROUND(AVG(salario), 2) AS salario_promedio
 FROM empleados;
 
 -- 5. Mostrar los clientes junto con su numero de cuenta.
-SELECT c.nombre, c.apellido, cu.numero_cuenta
-FROM clientes c
-JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-ORDER BY c.id_cliente;
+SELECT clientes.nombre, clientes.apellido, cuentas.numero_cuenta
+FROM clientes
+JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+ORDER BY clientes.id_cliente;
 
 -- 6. Mostrar los clientes y el tipo de cuenta que poseen.
-SELECT c.nombre, c.apellido, tc.descripcion AS tipo_cuenta
-FROM clientes c
-JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-JOIN tipos_cuenta tc ON tc.id_tipo = cu.id_tipo
-ORDER BY c.id_cliente;
+SELECT clientes.nombre, clientes.apellido, tipos_cuenta.descripcion AS tipo_cuenta
+FROM clientes
+JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+JOIN tipos_cuenta ON tipos_cuenta.id_tipo = cuentas.id_tipo
+ORDER BY clientes.id_cliente;
 
 -- 7. Mostrar los empleados y la sucursal donde trabajan.
-SELECT e.nombre AS empleado, e.cargo, s.nombre AS sucursal, s.ciudad
-FROM empleados e
-JOIN sucursales s ON s.id_sucursal = e.id_sucursal
-ORDER BY s.nombre, e.nombre;
+SELECT empleados.nombre AS empleado, empleados.cargo, sucursales.nombre AS sucursal, sucursales.ciudad
+FROM empleados
+JOIN sucursales ON sucursales.id_sucursal = empleados.id_sucursal
+ORDER BY sucursales.nombre, empleados.nombre;
 
 -- 8. Mostrar los clientes que tienen prestamos y el valor del prestamo.
-SELECT c.nombre, c.apellido, p.monto AS valor_prestamo
-FROM clientes c
-JOIN prestamos p ON p.id_cliente = c.id_cliente
-ORDER BY c.id_cliente;
+SELECT clientes.nombre, clientes.apellido, prestamos.monto AS valor_prestamo
+FROM clientes
+JOIN prestamos ON prestamos.id_cliente = clientes.id_cliente
+ORDER BY clientes.id_cliente;
 
 -- 9. Mostrar todas las transacciones realizadas por cada cliente.
-SELECT c.nombre, c.apellido, cu.numero_cuenta, t.tipo, t.monto, t.fecha
-FROM clientes c
-JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-JOIN transacciones t ON t.id_cuenta = cu.id_cuenta
-ORDER BY c.id_cliente, t.id_transaccion;
+SELECT clientes.nombre, clientes.apellido, cuentas.numero_cuenta, transacciones.tipo, transacciones.monto, transacciones.fecha
+FROM clientes
+JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+JOIN transacciones ON transacciones.id_cuenta = cuentas.id_cuenta
+ORDER BY clientes.id_cliente, transacciones.id_transaccion;
 
 -- 10. Mostrar cuantos clientes existen por ciudad.
 SELECT ciudad, COUNT(*) AS total_clientes
@@ -195,25 +195,25 @@ GROUP BY tipo
 ORDER BY tipo;
 
 -- 12. Mostrar el saldo promedio por tipo de cuenta.
-SELECT tc.descripcion AS tipo_cuenta, ROUND(AVG(cu.saldo), 2) AS saldo_promedio
-FROM tipos_cuenta tc
-JOIN cuentas cu ON cu.id_tipo = tc.id_tipo
-GROUP BY tc.descripcion
-ORDER BY tc.descripcion;
+SELECT tipos_cuenta.descripcion AS tipo_cuenta, ROUND(AVG(cuentas.saldo), 2) AS saldo_promedio
+FROM tipos_cuenta
+JOIN cuentas ON cuentas.id_tipo = tipos_cuenta.id_tipo
+GROUP BY tipos_cuenta.descripcion
+ORDER BY tipos_cuenta.descripcion;
 
 -- 13. Mostrar cuantos empleados tiene cada sucursal.
-SELECT s.nombre AS sucursal, COUNT(e.id_empleado) AS total_empleados
-FROM sucursales s
-LEFT JOIN empleados e ON e.id_sucursal = s.id_sucursal
-GROUP BY s.id_sucursal, s.nombre
-ORDER BY s.nombre;
+SELECT sucursales.nombre AS sucursal, COUNT(empleados.id_empleado) AS total_empleados
+FROM sucursales
+LEFT JOIN empleados ON empleados.id_sucursal = sucursales.id_sucursal
+GROUP BY sucursales.id_sucursal, sucursales.nombre
+ORDER BY sucursales.nombre;
 
 -- 14. Mostrar el saldo total agrupado por ciudad.
-SELECT c.ciudad, SUM(cu.saldo) AS saldo_total
-FROM clientes c
-JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-GROUP BY c.ciudad
-ORDER BY c.ciudad;
+SELECT clientes.ciudad, SUM(cuentas.saldo) AS saldo_total
+FROM clientes
+JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+GROUP BY clientes.ciudad
+ORDER BY clientes.ciudad;
 
 -- 15. Mostrar los clientes que poseen prestamos.
 SELECT nombre, apellido
@@ -253,7 +253,7 @@ chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
 $env:PGCLIENTENCODING = "UTF8"
-psql -h localhost -p 5432 -U postgres -d bancodb
+psql --host=localhost --port=5432 --username=postgres --dbname=bancodb
 ```
 
 Si `psql` no esta en el PATH:
@@ -263,7 +263,7 @@ chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $env:PGPASSWORD = "123"
 $env:PGCLIENTENCODING = "UTF8"
-& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -h localhost -p 5432 -U postgres -d bancodb
+& "C:\Program Files\PostgreSQL\18\bin\psql.exe" --host=localhost --port=5432 --username=postgres --dbname=bancodb
 ```
 
 Dentro de `psql`, ejecuta estos ejemplos:
@@ -271,30 +271,30 @@ Dentro de `psql`, ejecuta estos ejemplos:
 ```sql
 -- INNER JOIN
 -- Muestra solo clientes que tienen cuenta registrada.
-SELECT c.id_cliente, c.nombre, c.apellido, cu.numero_cuenta, cu.saldo
-FROM clientes c
-INNER JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-ORDER BY c.id_cliente;
+SELECT clientes.id_cliente, clientes.nombre, clientes.apellido, cuentas.numero_cuenta, cuentas.saldo
+FROM clientes
+INNER JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+ORDER BY clientes.id_cliente;
 
 -- LEFT JOIN
 -- Muestra todos los clientes, tengan o no tengan prestamos.
-SELECT c.id_cliente, c.nombre, c.apellido, p.id_prestamo, p.monto
-FROM clientes c
-LEFT JOIN prestamos p ON p.id_cliente = c.id_cliente
-ORDER BY c.id_cliente;
+SELECT clientes.id_cliente, clientes.nombre, clientes.apellido, prestamos.id_prestamo, prestamos.monto
+FROM clientes
+LEFT JOIN prestamos ON prestamos.id_cliente = clientes.id_cliente
+ORDER BY clientes.id_cliente;
 
 -- RIGHT JOIN
 -- Muestra todas las sucursales y los empleados relacionados.
-SELECT e.id_empleado, e.nombre AS empleado, s.id_sucursal, s.nombre AS sucursal
-FROM empleados e
-RIGHT JOIN sucursales s ON s.id_sucursal = e.id_sucursal
-ORDER BY s.id_sucursal, e.id_empleado;
+SELECT empleados.id_empleado, empleados.nombre AS empleado, sucursales.id_sucursal, sucursales.nombre AS sucursal
+FROM empleados
+RIGHT JOIN sucursales ON sucursales.id_sucursal = empleados.id_sucursal
+ORDER BY sucursales.id_sucursal, empleados.id_empleado;
 
 -- FULL JOIN
 -- Muestra todos los clientes y todas las cuentas, exista o no coincidencia.
-SELECT c.id_cliente, c.nombre, c.apellido, cu.id_cuenta, cu.numero_cuenta
-FROM clientes c
-FULL JOIN cuentas cu ON cu.id_cliente = c.id_cliente
-ORDER BY c.id_cliente, cu.id_cuenta;
+SELECT clientes.id_cliente, clientes.nombre, clientes.apellido, cuentas.id_cuenta, cuentas.numero_cuenta
+FROM clientes
+FULL JOIN cuentas ON cuentas.id_cliente = clientes.id_cliente
+ORDER BY clientes.id_cliente, cuentas.id_cuenta;
 
 ```
